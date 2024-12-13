@@ -6,7 +6,7 @@ def truncterminal(string):
     w = os.get_terminal_size().columns
     
     if len(string) > w:
-        return string[:w - 3] + '...'
+        return string[:w - 3]
     return string
 
 #ANSI const for colouring text
