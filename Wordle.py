@@ -4,6 +4,23 @@ from random import choice
 
 realwordlst = set(words.words())
 
+#ansi colour consts
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+GREY = '\033[90m'
+RESET = '\033[0m'
+
+#colour letters without external libaries
+def colourltrvanilla(ltr,status):
+    global GREEN,YELLOW,GREY,RESET
+
+    if status == 'green':
+        return f'{GREEN}{str(ltr)}{RESET}'
+    elif status == 'yellow':
+        return f'{YELLOW}{str(ltr)}{RESET}'
+    elif status == 'grey':
+        return f'{GREY}{str(ltr)}{RESET}'
+
 #word validation using nltk words
 def validateword(word):
     if len(word) != 5:
@@ -24,6 +41,8 @@ def validateword(word):
             return False
 
 #random word of the day
+print(f'\nWelcome to {colourltrvanilla('Wordle','green')}!\nYou have 6 tries to guess a 5 letter word.\n')
+
 word = str(choice([word for word in realwordlst if len(word) == 5])).lower()
 
 wordlst = []
@@ -57,6 +76,7 @@ def checkguess(guess):
 
     resultlst = []
     guesslst = []
+    tmpguesslst = []
 
     for char in guess:
         guesslst +=char
@@ -65,12 +85,15 @@ def checkguess(guess):
         if guesslst[i] in wordlst:
             if guesslst[i] == wordlst[i]:
                 resultlst += ('🟩 ')
+                tmpguesslst.append(colourltrvanilla(guesslst[i],'green'))
             else:
                 resultlst  += ('🟨 ')
+                tmpguesslst.append(colourltrvanilla(guesslst[i],'yellow'))
         else:
             resultlst += ('⬜️ ')
+            tmpguesslst.append(colourltrvanilla(guesslst[i],'grey'))
 
-    return ''.join(resultlst)
+    return (''.join(resultlst)), str(''.join(tmpguesslst))
 
 i = 0
 
@@ -97,8 +120,8 @@ while True:
 
     if validateguess(guess) == True:
         tried.append(guess)
-        result = checkguess(guess)
-        print(guess,result)
+        result,textresult = checkguess(guess)
+        print(textresult)
 
         if result == '🟩 🟩 🟩 🟩 🟩 ':
             break
